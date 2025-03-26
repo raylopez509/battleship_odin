@@ -1,4 +1,4 @@
-import { Ship } from './index.js';
+import { Ship, Gameboard } from './index.js';
 
 beforeEach(() => {
 
@@ -15,4 +15,13 @@ test('show that ship is sunk', () => {
   ship.hit();
   ship.isSunk();
   expect(ship.isSunk).toBeTruthy();
+});
+
+test('was a ship actually placed on the board', () => {
+  let board = new Gameboard(10,10);
+  // console.log(board.board);
+  // console.log(board.board[0]);
+  let x = [10][10];
+  console.log(x);
+  expect(board[2][3]).toBe(5);
 });

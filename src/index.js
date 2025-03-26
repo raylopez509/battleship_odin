@@ -19,3 +19,26 @@ export class Ship {
     return this.sunk;
   }
 }
+
+export class Gameboard {
+  constructor(x, y) {
+    this.board = [x];
+    for(let i = 0; i < x; i++) {
+      this.board[i] = [y];
+    }
+    this.missedAttacks = [];
+  }
+  placeShip(startX, startY, placeHorizontally) {
+
+  }
+  receiveAttack(x, y) {
+    //check coordinates
+    //if hit,
+    //ship.hit
+    //if miss, record miss
+  }
+}
+
+let x = [10][10];
+
+console.log(x);
