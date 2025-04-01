@@ -17,11 +17,34 @@ test('show that ship is sunk', () => {
   expect(ship.isSunk).toBeTruthy();
 });
 
-test('was a ship actually placed on the board', () => {
+test('cant place ship', () => {
   let board = new Gameboard(10,10);
-  // console.log(board.board);
-  // console.log(board.board[0]);
-  let x = [10][10];
-  console.log(x);
-  expect(board[2][3]).toBe(5);
+  let ship = new Ship(3,0,false);
+  let result = board.placeShip(ship,8,0,true);
+  expect(result).toMatch(/error placing ship/);
+})
+
+test('correctly placed ship', () => {
+  let board = new Gameboard(10,10);
+  let ship = new Ship(2,0,false);
+  let result = board.placeShip(ship,8,0,true);
+  expect(result).toMatch(/placed ship/);  
+})
+
+test('ship are in each spot', () => {
+  let board = new Gameboard(10,10);
+  let ship = new Ship(3,0,false);
+  let result = board.placeShip(ship,7,0,true);
+  expect(board.board[7][0]).toEqual(ship);
+  expect(board.board[8][0]).toEqual(ship);
+  expect(board.board[9][0]).toEqual(ship);
+})
+
+test('ship hits get increased', () => {
+  let board = new Gameboard(10,10);
+  let ship = new Ship(3,0,false);
+  board.placeShip(ship,7,0,true);
+  board.board[7][0].hit();
+  expect(board.board[7][0].timesHit).toBe(1);
+  expect(ship.timesHit).toBe(1);
 });

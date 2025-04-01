@@ -21,15 +21,29 @@ export class Ship {
 }
 
 export class Gameboard {
-  constructor(x, y) {
-    this.board = [x];
-    for(let i = 0; i < x; i++) {
-      this.board[i] = [y];
+  constructor(length, height) {
+    this.length = length;
+    this.height = height;
+    this.board = [length];
+    for(let i = 0; i < length; i++) {
+      this.board[i] = [height];
     }
     this.missedAttacks = [];
   }
-  placeShip(startX, startY, placeHorizontally) {
-
+  placeShip(ship,startX, startY, placeHorizontally) {
+    if(placeHorizontally) {
+      if(startX + ship.length > this.length) {
+        return "error placing ship";
+      }
+      else {
+        let i = startX;
+        for(let j = 0; j < ship.length; j++) {
+          this.board[i][startY] = ship;
+          i++;
+        }
+        return "placed ship";
+      }
+    }
   }
   receiveAttack(x, y) {
     //check coordinates
@@ -38,7 +52,3 @@ export class Gameboard {
     //if miss, record miss
   }
 }
-
-let x = [10][10];
-
-console.log(x);
