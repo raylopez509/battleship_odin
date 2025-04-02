@@ -87,3 +87,10 @@ export class Gameboard {
     return true;
   }
 }
+
+export class Player {
+  constructor(isComputer) {
+    this.isComputer = isComputer;
+    this.gameBoard = new Gameboard();
+  }
+}
