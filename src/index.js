@@ -1,7 +1,3 @@
-import "./style.css";
-
-console.log("test");
-
 export class Ship {
   constructor(length, timesHit, sunk) {
     this.length = length;
@@ -93,6 +89,6 @@ export class Gameboard {
 export class Player {
   constructor(isComputer) {
     this.isComputer = isComputer;
-    this.gameBoard = new Gameboard();
+    this.gameBoard = new Gameboard(10,10);
   }
 }
