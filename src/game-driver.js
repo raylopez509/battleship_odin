@@ -5,6 +5,7 @@ const player1 = new Player(false);
 const player2 = new Player(true);
 const cpuClicks = [];
 let isCurrentTurnP1 = true;
+let gameIsOver = false;
 
 const initBoards = (() => {
   const p1Carrier = new Ship(5,0,false)
@@ -46,7 +47,7 @@ function createBoard(player, isPlayer1) {
 
 function boardClickHandler(event) {
   const isPlayer1 = event.target.dataset.isPlayer1 === 'true';
-  if(isPlayer1 !== isCurrentTurnP1) {
+  if(isPlayer1 !== isCurrentTurnP1 && !gameIsOver) {
     const x = event.target.dataset.x;
     const y = event.target.dataset.y;
     const player = getPlayer(isPlayer1);
@@ -58,7 +59,8 @@ function boardClickHandler(event) {
       }
       else {
         document.querySelector('.game-status').textContent = "Game Over!";
-        
+
+        gameIsOver = true;
       }
     }
     else {
@@ -66,7 +68,7 @@ function boardClickHandler(event) {
       isCurrentTurnP1 = !isCurrentTurnP1;
     }
 
-    if(isCurrentTurnP1 === false && player2.isComputer === true) {
+    if(isCurrentTurnP1 === false && player2.isComputer === true && !gameIsOver) {
       cpuTurn();
     }
     //
