@@ -60,6 +60,41 @@ export class Gameboard {
       }
     }
   }
+
+  placeShipRandomly(ship) {
+    let randIfHorizontally = Math.random() < 0.5;
+    // let randIfHorizontally = true;
+    let shipLength = ship.length;
+    let canLegallyPlace = false;
+    while(!canLegallyPlace) {
+      let randX, randY;
+      if(randIfHorizontally) {
+        randX = Math.floor(Math.random() * (this.length - shipLength + 1));
+        randY = Math.floor(Math.random() * this.height);
+        canLegallyPlace = true;
+        for(let x = randX; x < randX + shipLength; x++) {
+          if(this.board[x][randY] instanceof Ship) {
+            canLegallyPlace = false;
+          }
+        }
+
+      }
+      else {
+        randX = Math.floor(Math.random() * this.height);
+        randY = Math.floor(Math.random() * (this.length - shipLength + 1));
+        canLegallyPlace = true;
+        for(let y = randY; y < randY + shipLength;y++) {
+          if(this.board[randX][y] instanceof Ship) {
+            canLegallyPlace = false;
+          }
+        }
+      }
+      if(canLegallyPlace) {
+        this.placeShip(ship,randX,randY,randIfHorizontally);
+      }
+    }
+  }
+  
   receiveAttack(x, y) {
     if(this.board[x][y] instanceof Ship) {
       this.board[x][y].hit();
