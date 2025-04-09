@@ -1,9 +1,11 @@
 import { Ship, Gameboard, Player } from './index.js';
 import "./style.css";
 
+const player1 = new Player(false);
+const player2 = new Player(true);
+let isCurrentTurnP1 = true;
+
 const initBoards = (() => {
-  const player1 = new Player(false);
-  const player2 = new Player(true);
   const p1Carrier = new Ship(5,0,false)
   const p1Battleship = new Ship(4,0,false)
   const p1Cruiser = new Ship(3,0,false)
@@ -36,11 +38,39 @@ function createBoard(player, isPlayer1) {
 }
 
 function boardClickHandler(event) {
-  const isPlayer1 = event.target.dataset.isPlayer1;
+  const isPlayer1 = event.target.dataset.isPlayer1 === 'true';
   const x = event.target.dataset.x;
   const y = event.target.dataset.y;
-  console.log(`${event.target.dataset.x},${event.target.dataset.y}`);
-  console.log(event.target.dataset);
+  const player = getPlayer(isPlayer1);
+  const isHit = player.gameBoard.receiveAttack(x,y);
+  console.log(event.target);
+  if(isHit) {
+    event.target.style.backgroundColor='black';
+    if(!player.gameBoard.reportAllSinksSunk()) {
+      console.log("keep going");
+    }
+    else {
+      console.log("game over");
+    }
+  }
+  else {
+    event.target.style.backgroundColor='yellow';
+  }
+  event.target.removeEventListener('click', boardClickHandler);
+  //check if there's a ship in space
+  //if ship, give that ship a hit register
+  //else register miss
+  
+  //afterward, remove event listener to that event.target
+}
+
+function getPlayer(isPlayer1) {
+  if(isPlayer1) {
+    return player1;
+  }
+  else {
+    return player2;
+  }
 }
 
 function renderBoard(player,boardNode, isPlayer1) {
