@@ -63,9 +63,11 @@ export class Gameboard {
   receiveAttack(x, y) {
     if(this.board[x][y] instanceof Ship) {
       this.board[x][y].hit();
+      return true;
     }
     else {
       this.missedAttacks.push({x:x, y:y});
+      return false;
     }
   }
   alreadyReceivedAttack(x, y) {
