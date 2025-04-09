@@ -3,6 +3,7 @@ import "./style.css";
 
 const player1 = new Player(false);
 const player2 = new Player(true);
+const cpuClicks = [];
 let isCurrentTurnP1 = true;
 
 const initBoards = (() => {
@@ -16,10 +17,16 @@ const initBoards = (() => {
   const p2Cruiser = new Ship(3,0,false)
   const p2Submarine = new Ship(3,0,false)
   const p2Destroyer = new Ship(2,0,false)
-  player1.gameBoard.placeShip(p1Carrier,0,0,true);
-  player1.gameBoard.placeShip(p1Cruiser,5,5,true);
-  player2.gameBoard.placeShip(p2Carrier,0,1,false);
-  player2.gameBoard.placeShip(p2Destroyer,8,9,true);
+  player1.gameBoard.placeShipRandomly(p1Carrier);
+  player1.gameBoard.placeShipRandomly(p1Battleship);
+  player1.gameBoard.placeShipRandomly(p1Cruiser);
+  player1.gameBoard.placeShipRandomly(p1Submarine);
+  player1.gameBoard.placeShipRandomly(p1Destroyer);
+  player2.gameBoard.placeShipRandomly(p2Carrier);
+  player2.gameBoard.placeShipRandomly(p2Battleship);
+  player2.gameBoard.placeShipRandomly(p2Cruiser);
+  player2.gameBoard.placeShipRandomly(p2Submarine);
+  player2.gameBoard.placeShipRandomly(p2Destroyer);
   createBoard(player1, true);
   createBoard(player2, false);
 })();
@@ -39,29 +46,32 @@ function createBoard(player, isPlayer1) {
 
 function boardClickHandler(event) {
   const isPlayer1 = event.target.dataset.isPlayer1 === 'true';
-  const x = event.target.dataset.x;
-  const y = event.target.dataset.y;
-  const player = getPlayer(isPlayer1);
-  const isHit = player.gameBoard.receiveAttack(x,y);
-  console.log(event.target);
-  if(isHit) {
-    event.target.style.backgroundColor='black';
-    if(!player.gameBoard.reportAllSinksSunk()) {
-      console.log("keep going");
+  if(isPlayer1 !== isCurrentTurnP1) {
+    const x = event.target.dataset.x;
+    const y = event.target.dataset.y;
+    const player = getPlayer(isPlayer1);
+    const isHit = player.gameBoard.receiveAttack(x,y);
+    if(isHit) {
+      event.target.style.backgroundColor='black';
+      if(!player.gameBoard.reportAllSinksSunk()) {
+        console.log("keep going");
+      }
+      else {
+        document.querySelector('.game-status').textContent = "Game Over!";
+        
+      }
     }
     else {
-      console.log("game over");
+      event.target.style.backgroundColor='yellow';
+      isCurrentTurnP1 = !isCurrentTurnP1;
     }
+
+    if(isCurrentTurnP1 === false && player2.isComputer === true) {
+      cpuTurn();
+    }
+    //
+    event.target.removeEventListener('click', boardClickHandler);
   }
-  else {
-    event.target.style.backgroundColor='yellow';
-  }
-  event.target.removeEventListener('click', boardClickHandler);
-  //check if there's a ship in space
-  //if ship, give that ship a hit register
-  //else register miss
-  
-  //afterward, remove event listener to that event.target
 }
 
 function getPlayer(isPlayer1) {
@@ -82,10 +92,26 @@ function renderBoard(player,boardNode, isPlayer1) {
       box.dataset.x = x;
       box.dataset.y = y;
       boardNode.appendChild(box);
-      if(player.gameBoard.board[x][y] instanceof Ship) {
-        box.style.backgroundColor='red';
+      if(player.gameBoard.board[x][y] instanceof Ship && player.isComputer === false) {
+        box.style.backgroundColor='gray';
+      }
+      else {
+        box.style.backgroundColor='lightblue'
       }
       box.addEventListener('click', boardClickHandler);
     }
   }
+}
+
+function cpuTurn() {
+  let board = document.querySelector('.p1-board');
+  let squares = board.children;
+  let randNum = Math.floor(Math.random() * 100);
+  while(cpuClicks.includes(randNum)) {
+    randNum = Math.floor(Math.random() * 100);
+  }
+  let square = squares.item(randNum);
+  console.log(square);
+  cpuClicks.push(randNum);
+  square.click();
 }
